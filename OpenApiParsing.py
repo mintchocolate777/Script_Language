@@ -14,6 +14,30 @@ from xml.etree import ElementTree
 # &numOfRows=10
 # &neuter_yn=Y
 
+def extractAnimalData(strXml):
+    from xml.etree import ElementTree
+    tree = ElementTree.fromstring(strXml)
+
+    itemElements = tree.getiterator("item")
+    for item in itemElements:
+        kind = item.find("kindCd")
+        age = item.find("age")
+        gender = item.find("sexCd")
+       # color = item.find("colorCd")
+       # weight = item.find("weight")
+       # happenPlace = item.find("happenPlace")
+       # happenDt = item.find("happenDt")
+       # specialMark = item.find("specialMark")
+       # neuterYn = item.find("neuterYn")
+       # careNm = item.find("careNm")
+       # careAddr = item.find("careAddr")
+       # chargeNm = item.find("chargeNm")
+       # careTel = item.find("careTel")
+        print(kind.text, ' ' , age.text , ' ' , gender.text)
+        #if len(kind.text)>0:
+        #    return {"KIND":kind.text, "AGE":age.text, "GENDER": gender.text}
+
+
 bgnde = input("검색날짜 시작일을 입력하세요 (yyyymmdd)")
 endde = input("검색날짜 종료일을 입력하세요 (yyyymmdd)")
 
@@ -32,5 +56,5 @@ else:
 
 conn.close()
 
-
-print(XmlString)
+extractAnimalData(XmlString)
+#print(XmlString)
