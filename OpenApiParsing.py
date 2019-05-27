@@ -14,6 +14,33 @@ from xml.etree import ElementTree
 # &numOfRows=10
 # &neuter_yn=Y
 
+def SearchByDate(strXml):
+    from xml.etree import ElementTree
+    tree = ElementTree.fromstring(strXml)
+
+    itemElements = tree.getiterator("item")
+    for item in itemElements:
+        kind = item.find("kindCd")
+        age = item.find("age")
+        gender = item.find("sexCd")
+        color = item.find("colorCd")
+        weight = item.find("weight")
+        specialMark = item.find("specialMark")
+        happenPlace = item.find("happenPlace")
+        happenDt = item.find("happenDt")
+        neuterYn = item.find("neuterYn")
+        careNm = item.find("careNm")
+        careAddr = item.find("careAddr")
+        chargeNm = item.find("chargeNm")
+        careTel = item.find("careTel")
+        print("-------------------------------------------")
+        print(kind.text, ' ' , age.text , " 성별:" , gender.text)
+        print("털색:", color.text, " 체중:", weight.text," 특징:", specialMark.text)
+        print("발견:", happenPlace.text, " 접수:", happenDt.text, " 중성화여부:", neuterYn.text)
+        print("보호소이름:", careNm.text, " 보호장소:", careAddr.text, " 담당자:", chargeNm.text, " 연락처:", careTel.text)
+        #    return {"KIND":kind.text, "AGE":age.text, "GENDER": gender.text}
+    print("-------------------------------------------")
+
 bgnde = input("검색날짜 시작일을 입력하세요 (yyyymmdd)")
 endde = input("검색날짜 종료일을 입력하세요 (yyyymmdd)")
 
@@ -32,5 +59,5 @@ else:
 
 conn.close()
 
-
-print(XmlString)
+SearchByDate(XmlString)
+#print(XmlString)
