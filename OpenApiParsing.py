@@ -2,17 +2,9 @@
 import urllib
 import http.client
 from xml.dom.minidom import *
-from xml.etree import ElementTree
 
 #http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic?
 # #serviceKey=QNsNyJUh2SBMrJ6%2BBGKW54UWg1l3DmN0l0%2F7DjXC%2BLSrzbdKZaHHODRMXS1CQvallUQqH5032TefPXykbUq%2BTQ%3D%3D
-# &bgnde=20140601
-# &endde=20140630
-# &upkind=417000
-# &state=notice
-# &pageNo=1
-# &numOfRows=10
-# &neuter_yn=Y
 
 def SearchByDate(strXml):
     from xml.etree import ElementTree
