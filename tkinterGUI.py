@@ -106,6 +106,8 @@ class WarmHeart:
         self.SearchButton.place(x=280, y=110)
 
         self.i = 0
+        self.upr_cd = "0" # 시도
+        self.org_cd = "0" # 시군구
         window.mainloop()
 
     def localRadioFunc(self):   # 라디오 버튼 처리 함수
@@ -114,7 +116,8 @@ class WarmHeart:
                 self.startEntry.destroy()
                 self.endEntry.destroy()
             self.Label['text'] = "시/도       시/군/구"
-            sidos=["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시"]    #시도 받아오자
+            sidos=["서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시"
+                   ,"세종특별자치시", "대전광역시", "울산광역시","경기도","강원도","충청북도"]    #시도 받아오자
             self.startCombo=ttk.Combobox(window, width=5, values=sidos)
             self.startCombo.place(x=25, y=110)
 
@@ -123,8 +126,6 @@ class WarmHeart:
 
             self.sidoButton = Button(window, text=" ", background = "pink", command = self.sidoButtonFunc)
             self.sidoButton.place(x=83,y=110)
-            #sigungus = self.MakeSigunguList(self.FindSidoCode(self.startCombo.get()))
-            #OpenSidoApi.FindSidoCode("서울특별시")#self.startCombo.get())
             self.prevRadioVal = 1
 
         elif self.RadioVar.get()==2:
@@ -141,11 +142,25 @@ class WarmHeart:
             self.prevRadioVal = 2
 
     def sidoButtonFunc(self):
-        pass
+        sigungus = []
+        self.upr_cd = OpenSidoApi.FindSidoCode(self.startCombo.get())
+        sigungus = OpenSigunguApi.MakeSIgunguList(self.upr_cd)
+        self.endCombo['values'] = sigungus
 
     def SearchButtonFunc(self):
         if self.RadioVar.get()==1:
-            pass
+            self.org_cd = OpenSigunguApi.FindSigunguCode(self.endCombo.get(),self.upr_cd)
+            tree = OpenApiParsing.SearchBySigungu(self.upr_cd, self.org_cd)
+            itemElements = tree.getiterator("item")
+            self.LeftFrame.delete(0, self.i)
+            self.i = 0
+            curAnimalList.clear()
+            for item in itemElements:
+                curAnimalList.append(AnimalList(item))
+                kind = item.find("kindCd")
+                self.LeftFrame.insert(self.i, kind.text)
+                self.i += 1
+
         elif self.RadioVar.get()==2:
             bgnde = self.startEntry.get()
             endde = self.endEntry.get()
@@ -177,25 +192,6 @@ class WarmHeart:
         self.RenderText[10]['text'] = "보호장소 " + curAnimalList[s].careAddr
         self.RenderText[11]['text'] = "담당자 " + curAnimalList[s].chargeNm
         self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
-
-    def MakeEndList(self):
-        self.endCombo['values'] = OpenSigunguApi.MakeSIgunguList(OpenSidoApi.FindSidoCode(self.startCombo.get()))
-
-    def Printdd(self):
-        print("dasfsa")
-
-    def MakeSigunguList(self, sidocode):
-        #sidocode = "6410000"
-        # http://openapi.animal.go.kr/openapi/service/rest/abandonmentPublicSrvc/sigungu?upr_cd=6110000&ServiceKey=서비스키
-        # 해당 시,도의 시군구목록 받아오기
-        servicekey = "&ServiceKey=QNsNyJUh2SBMrJ6%2BBGKW54UWg1l3DmN0l0%2F7DjXC%2BLSrzbdKZaHHODRMXS1CQvallUQqH5032TefPXykbUq%2BTQ%3D%3D"
-        server = "/openapi/service/rest/abandonmentPublicSrvc/sigungu?upr_cd="
-
-        conn = http.client.HTTPConnection("openapi.animal.go.kr")
-        conn.request("GET", server + sidocode + servicekey)
-        res = conn.getresponse()
-
-        # 시군구 리스트 만들어서 반환
 
 
 WarmHeart()
