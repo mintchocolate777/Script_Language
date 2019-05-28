@@ -19,19 +19,32 @@ curAnimalList = []
 
 class AnimalList:
     def __init__(self, iter):
-        self.kind = iter.find('kindCd').text
-        self.age = iter.find("age").text
-        self.gender = iter.find("sexCd").text
-        self.color = iter.find("colorCd").text
-        self.weight = iter.find("weight").text
-        self.specialMark = iter.find("specialMark").text
-        self.happenPlace = iter.find("happenPlace").text
-        self.happenDt = iter.find("happenDt").text
-        self.neuterYn = iter.find("neuterYn").text
-        self.careNm = iter.find("careNm").text
-        self.careAddr = iter.find("careAddr").text
-        self.chargeNm = iter.find("chargeNm").text
-        self.careTel = iter.find("careTel").text
+        if iter.find('kindCd')!=None:
+            self.kind = iter.find('kindCd').text
+        if iter.find('age') != None:
+            self.age = iter.find("age").text
+        if iter.find('sexCd')!=None:
+            self.gender = iter.find("sexCd").text
+        if iter.find('colorCd')!=None:
+            self.color = iter.find("colorCd").text
+        if iter.find('weight')!=None:
+            self.weight = iter.find("weight").text
+        if iter.find('specialMark')!=None:
+            self.specialMark = iter.find("specialMark").text
+        if iter.find('happenPlace')!=None:
+            self.happenPlace = iter.find("happenPlace").text
+        if iter.find('happenDt')!=None:
+            self.happenDt = iter.find("happenDt").text
+        if iter.find('neuterYn')!=None:
+            self.neuterYn = iter.find("neuterYn").text
+        if iter.find('careNm')!=None:
+            self.careNm = iter.find("careNm").text
+        if iter.find('careAddr')!=None:
+            self.careAddr = iter.find("careAddr").text
+        if iter.find('chargeNm')!=None:
+            self.chargeNm = iter.find("chargeNm").text
+        if iter.find('careTel')!=None:
+            self.careTel = iter.find("careTel").text
 
 
 class WarmHeart:
@@ -107,15 +120,15 @@ class WarmHeart:
 
             self.endCombo = ttk.Combobox(window, width=5)
             self.endCombo.place(x=100, y=110)
-            self.prevRadioVal = 1
 
             self.sidoButton = Button(window, text=" ", background = "pink", command = self.sidoButtonFunc)
             self.sidoButton.place(x=83,y=110)
             #sigungus = self.MakeSigunguList(self.FindSidoCode(self.startCombo.get()))
             #OpenSidoApi.FindSidoCode("서울특별시")#self.startCombo.get())
+            self.prevRadioVal = 1
 
         elif self.RadioVar.get()==2:
-            if self.prevRadioVal == 2:
+            if self.prevRadioVal == 1:
                 self.startCombo.destroy()
                 self.endCombo.destroy()
                 self.sidoButton.destroy()
@@ -139,6 +152,7 @@ class WarmHeart:
             tree = OpenApiParsing.SearchByDate(bgnde,endde)
             itemElements = tree.getiterator("item")
             self.LeftFrame.delete(0,self.i)
+            self.i = 0
             curAnimalList.clear()
             for item in itemElements:
                 curAnimalList.append(AnimalList(item))
