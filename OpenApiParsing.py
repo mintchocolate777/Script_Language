@@ -10,17 +10,16 @@ def SearchByDate(bgnde, endde):
     server = "/openapi/service/rest/abandonmentPublicSrvc/abandonmentPublic?serviceKey=QNsNyJUh2SBMrJ6%2BBGKW54UWg1l3DmN0l0%2F7DjXC%2BLSrzbdKZaHHODRMXS1CQvallUQqH5032TefPXykbUq%2BTQ%3D%3D"
     params = "&bgnde=" + bgnde + "&endde=" + endde
 
-    conn = http.client.HTTPConnection("openapi.animal.go.kr")
-    conn.request("GET", server + params)
-    res = conn.getresponse()
+    while(True):
+        conn = http.client.HTTPConnection("openapi.animal.go.kr")
+        conn.request("GET", server + params)
+        res = conn.getresponse()
 
-    if int(res.status) == 200:
-        XmlString = parseString(res.read().decode('utf-8')).toprettyxml()
-    else:
-        print("HTTP Request is failed :" + res.reason)
-        print(res.read().decode('utf-8'))
+        if int(res.status) == 200:
+            XmlString = parseString(res.read().decode('utf-8')).toprettyxml()
+            break
 
-    conn.close()
+        conn.close()
 
     from xml.etree import ElementTree
     tree = ElementTree.fromstring(XmlString)
