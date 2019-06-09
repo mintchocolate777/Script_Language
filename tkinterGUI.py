@@ -10,6 +10,7 @@ from xml.etree import ElementTree
 import OpenApiParsing
 import OpenSidoApi
 import OpenSigunguApi
+import gmail
 
 #OpenApiParsing.SearchByDate()
 
@@ -111,7 +112,7 @@ class WarmHeart:
         self.HeartButton = Button(window, font=tempFont, image=self.imageList[1], background="pink",command = self.HeartButtonFunc)
         self.HeartButton.place(x=630, y=33)
         self.imageList.append(PhotoImage(file='Image/MailButton.png'))
-        self.MailButton = Button(window, font=tempFont, image=self.imageList[3], background="pink")
+        self.MailButton = Button(window, font=tempFont, image=self.imageList[3], background="pink", command = self.MailButtonFunc)
         self.MailButton.place(x=650, y=33)
 
         # 검색 버튼
@@ -219,8 +220,25 @@ class WarmHeart:
         pass
 
     def MailButtonFunc(self):
-        pass
+        self.AnimalInform = str(self.RenderText[0]['text'] +"\n"+ self.RenderText[1]['text'] \
+                    + "\n"+self.RenderText[2]['text'] +"\n"+ self.RenderText[3]['text'] \
+                     +"\n"+ self.RenderText[4]['text'] + "\n"+self.RenderText[5]['text'] \
+                     +"\n"+self.RenderText[6]['text'] + "\n"+self.RenderText[7]['text'] \
+                    + "\n"+self.RenderText[8]['text'] + "\n"+self.RenderText[9]['text'] \
+                    + "\n"+self.RenderText[10]['text']+ "\n"+self.RenderText[11]['text'] +"\n"+ self.RenderText[12]['text'])
+        self.emailWindow = Tk()
+        self.emailWindow.width = 200
+        self.emailWindow.height = 150
+        self.emailCanvas = Canvas(self.emailWindow, width=self.emailWindow.width, height=self.emailWindow.height, bg="pink")
+        self.emailCanvas.pack()
+        self.emailLabel = Label(self.emailWindow, text = "이메일 주소를 입력하세요", bg = "pink")
+        self.emailLabel.place(x=30, y=40)
+        self.emailEntry = Entry(self.emailWindow, text='', justify=LEFT, width=20)
+        self.emailEntry.place(x=30, y=70)
+        self.emailButton = Button(self.emailWindow, text = "Send", background="pink",command = self.SendEmail)
+        self.emailButton.place(x=85, y=100)
 
-
+    def SendEmail(self):
+        gmail.SendEmail(str(self.emailEntry.get()), self.AnimalInform)
 
 WarmHeart()
