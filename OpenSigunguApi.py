@@ -39,17 +39,16 @@ def FindSigunguCode(target, sidocode):
     servicekey = "&ServiceKey=QNsNyJUh2SBMrJ6%2BBGKW54UWg1l3DmN0l0%2F7DjXC%2BLSrzbdKZaHHODRMXS1CQvallUQqH5032TefPXykbUq%2BTQ%3D%3D"
     server = "/openapi/service/rest/abandonmentPublicSrvc/sigungu?upr_cd="
 
-    conn = http.client.HTTPConnection("openapi.animal.go.kr")
-    conn.request("GET", server + sidocode + servicekey)
-    res = conn.getresponse()
+    while(True) :
+        conn = http.client.HTTPConnection("openapi.animal.go.kr")
+        conn.request("GET", server + sidocode + servicekey)
+        res = conn.getresponse()
 
-    if int(res.status) == 200:
-        SigunguString = parseString(res.read().decode('utf-8')).toprettyxml()
-    else:
-        print("HTTP Request is failed :" + res.reason)
-        print(res.read().decode('utf-8'))
+        if int(res.status) == 200:
+            SigunguString = parseString(res.read().decode('utf-8')).toprettyxml()
+            break
 
-    conn.close()
+        conn.close()
 
     from xml.etree import ElementTree
     tree = ElementTree.fromstring(SigunguString)
