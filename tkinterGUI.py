@@ -94,12 +94,25 @@ class WarmHeart:
         #self.RenderText.configure(state='disabled')
 
         # 정보/지도/하트 탭
-        self.InformButton = Button(window, font=tempFont, text=" 정보 ", background="pink", command=self.RightButtonFunc)
+        self.InformButton = Button(window, font=tempFont, text=" 정보 ", background="pink", command=self.InformButtonFunc)
         self.InformButton.place(x=375,y=33)
-        self.MapButton = Button(window, font=tempFont, text=" 지도 ", background="pink", command=self.RightButtonFunc)
+        self.MapButton = Button(window, font=tempFont, text=" 지도 ", background="pink", command=self.MapButtonFunc)
         self.MapButton.place(x=418, y=33)
-        self.HeartButton = Button(window, font=tempFont, text=" 하트 ", background="pink", command=self.RightButtonFunc)
-        self.HeartButton.place(x=461, y=33)
+        self.HeartListButton = Button(window, font=tempFont, text=" 하트 ", background="pink", command=self.HeartListButtonFunc)
+        self.HeartListButton.place(x=461, y=33)
+
+        # 이미지/하트/이메일 버튼
+        self.imageList = []
+        self.imageList.append(PhotoImage(file='Image/ImageButton.png'))
+        self.ImageButton = Button(window, font=tempFont, image = self.imageList[0], background="pink",command = self.ImageButtonFunc)
+        self.ImageButton.place(x=610, y=33)
+        self.imageList.append(PhotoImage(file='Image/EmptyHeartButton.png'))
+        self.imageList.append(PhotoImage(file='Image/RedHeartButton.png'))
+        self.HeartButton = Button(window, font=tempFont, image=self.imageList[1], background="pink",command = self.HeartButtonFunc)
+        self.HeartButton.place(x=630, y=33)
+        self.imageList.append(PhotoImage(file='Image/MailButton.png'))
+        self.MailButton = Button(window, font=tempFont, image=self.imageList[3], background="pink")
+        self.MailButton.place(x=650, y=33)
 
         # 검색 버튼
         self.SearchButton = Button(window, font=tempFont, text=" 검색 ", background="pink", command=self.SearchButtonFunc)
@@ -175,7 +188,7 @@ class WarmHeart:
                 self.LeftFrame.insert(self.i,kind.text)
                 self.i += 1
 
-    def RightButtonFunc(self):
+    def InformButtonFunc(self):
         selection = self.LeftFrame.curselection()
         s = selection[0]
 
@@ -192,6 +205,22 @@ class WarmHeart:
         self.RenderText[10]['text'] = "보호장소 " + curAnimalList[s].careAddr
         self.RenderText[11]['text'] = "담당자 " + curAnimalList[s].chargeNm
         self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
+
+    def MapButtonFunc(self):
+        pass
+
+    def HeartListButtonFunc(self):
+        pass
+
+    def ImageButtonFunc(self):
+        pass
+
+    def HeartButtonFunc(self):
+        pass
+
+    def MailButtonFunc(self):
+        pass
+
 
 
 WarmHeart()
