@@ -47,9 +47,9 @@ class AnimalList:
         if iter.find('careTel')!=None:
             self.careTel = iter.find("careTel").text
 
-
 class WarmHeart:
     state = "Inform"
+    HeartList = []
 
     def __init__(self):
         # 기본 캔버스
@@ -127,6 +127,8 @@ class WarmHeart:
         self.SearchButton.place(x=280, y=110)
 
         self.i = 0
+        self.Hearti = 0
+        self.HeartSelect = None
         self.upr_cd = "0" # 시도
         self.org_cd = "0" # 시군구
         window.mainloop()
@@ -197,6 +199,7 @@ class WarmHeart:
                 self.i += 1
 
     def InformButtonFunc(self):
+        # 프레임 전환
         if self.state == "Inform":
             pass
         elif self.state == "Map":
@@ -208,6 +211,7 @@ class WarmHeart:
                 self.RenderText[i].place(x=0, y=i * 20)
                 self.RenderText[i]['text'] = ""
         elif self.state == "Heart":
+            self.HeartSelect = self.frameList[2].curselection()
             self.frameList[2].destroy()
             self.frameList[0] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
                                       relief='ridge', background='white')
@@ -217,22 +221,46 @@ class WarmHeart:
                 self.RenderText[i].place(x=0, y=i * 20)
                 self.RenderText[i]['text'] = ""
         self.state = "Inform"
-        selection = self.LeftFrame.curselection()
-        s = selection[0]
 
-        self.RenderText[0]['text'] = "품종 " + curAnimalList[s].kind
-        self.RenderText[1]['text'] = "성별 " + curAnimalList[s].gender
-        self.RenderText[2]['text'] = "털색 " + curAnimalList[s].color
-        self.RenderText[3]['text'] = "체중 " + curAnimalList[s].weight
-        self.RenderText[4]['text'] = "나이 " + curAnimalList[s].age
-        self.RenderText[5]['text'] = "발견 " + curAnimalList[s].happenPlace
-        self.RenderText[6]['text'] = "특징 " + curAnimalList[s].specialMark
-        self.RenderText[7]['text'] = "접수 " + curAnimalList[s].happenDt
-        self.RenderText[8]['text'] = "중성화여부 " + curAnimalList[s].neuterYn
-        self.RenderText[9]['text'] = "보호소이름 " + curAnimalList[s].careNm
-        self.RenderText[10]['text'] = "보호장소 " + curAnimalList[s].careAddr
-        self.RenderText[11]['text'] = "담당자 " + curAnimalList[s].chargeNm
-        self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
+        # 처리
+        try:
+            selection = self.LeftFrame.curselection()
+            s = selection[0]
+            self.RenderText[0]['text'] = "품종 " + curAnimalList[s].kind
+            self.RenderText[1]['text'] = "성별 " + curAnimalList[s].gender
+            self.RenderText[2]['text'] = "털색 " + curAnimalList[s].color
+            self.RenderText[3]['text'] = "체중 " + curAnimalList[s].weight
+            self.RenderText[4]['text'] = "나이 " + curAnimalList[s].age
+            self.RenderText[5]['text'] = "발견 " + curAnimalList[s].happenPlace
+            self.RenderText[6]['text'] = "특징 " + curAnimalList[s].specialMark
+            self.RenderText[7]['text'] = "접수 " + curAnimalList[s].happenDt
+            self.RenderText[8]['text'] = "중성화여부 " + curAnimalList[s].neuterYn
+            self.RenderText[9]['text'] = "보호소이름 " + curAnimalList[s].careNm
+            self.RenderText[10]['text'] = "보호장소 " + curAnimalList[s].careAddr
+            self.RenderText[11]['text'] = "담당자 " + curAnimalList[s].chargeNm
+            self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
+        except:
+            try:
+                i=0
+                for h in self.HeartList[self.HeartSelect[0]]:
+                    if h != "\n":
+                        self.RenderText[i]['text'] += h
+                    else:
+                        i+=1
+            except:
+                pass
+
+        # 하트 버튼 어떻게 뜨는지
+        self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
+                                + "\n" + self.RenderText[2]['text'] + "\n" + self.RenderText[3]['text'] \
+                                + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
+                                + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
+                                + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
+                                + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
+        if self.AnimalInform in self.HeartList:
+            self.HeartButton['image'] = self.imageList[2]
+        else:
+            self.HeartButton['image'] = self.imageList[1]
 
     def MapButtonFunc(self):
         if self.state == "Inform":
@@ -250,6 +278,7 @@ class WarmHeart:
         self.state = "Map"
 
     def HeartListButtonFunc(self):
+        # 프레임 전환
         if self.state == "Inform":
             self.frameList[0].destroy()
             self.frameList[2] = Listbox(window, width=self.LeftFrameWidth, height=self.LeftFrameHeight+5, borderwidth=2, relief='ridge',
@@ -264,19 +293,32 @@ class WarmHeart:
             pass
         self.state = "Heart"
 
+        # 하트 리스트 출력
+        self.frameList[2].delete(0,self.Hearti)
+        self.Hearti = 0
+        for i in self.HeartList:
+            self.frameList[2].insert(self.Hearti, i)
+            self.Hearti+=1
+
     def ImageButtonFunc(self):
         pass
 
     def HeartButtonFunc(self):
-        pass
+        for i in self.HeartList:
+            if self.AnimalInform == i:
+                self.HeartList.remove(self.AnimalInform)
+                self.HeartButton['image'] = self.imageList[1]
+                return
+        self.HeartList.append(self.AnimalInform)
+        self.HeartButton['image'] = self.imageList[2]
 
     def MailButtonFunc(self):
-        self.AnimalInform = str(self.RenderText[0]['text'] +"\n"+ self.RenderText[1]['text'] \
-                    + "\n"+self.RenderText[2]['text'] +"\n"+ self.RenderText[3]['text'] \
-                     +"\n"+ self.RenderText[4]['text'] + "\n"+self.RenderText[5]['text'] \
-                     +"\n"+self.RenderText[6]['text'] + "\n"+self.RenderText[7]['text'] \
-                    + "\n"+self.RenderText[8]['text'] + "\n"+self.RenderText[9]['text'] \
-                    + "\n"+self.RenderText[10]['text']+ "\n"+self.RenderText[11]['text'] +"\n"+ self.RenderText[12]['text'])
+        self.AnimalInform = str(self.RenderText[0]['text'] + " \n" + self.RenderText[1]['text'] \
+                                + " \n" + self.RenderText[2]['text'] + " \n" + self.RenderText[3]['text'] \
+                                + " \n" + self.RenderText[4]['text'] + " \n" + self.RenderText[5]['text'] \
+                                + " \n" + self.RenderText[6]['text'] + " \n" + self.RenderText[7]['text'] \
+                                + " \n" + self.RenderText[8]['text'] + " \n" + self.RenderText[9]['text'] \
+                                + " \n" + self.RenderText[10]['text'] + " \n" + self.RenderText[11]['text'] + " \n" + self.RenderText[12]['text'])
         self.emailWindow = Tk()
         self.emailWindow.width = 200
         self.emailWindow.height = 150
