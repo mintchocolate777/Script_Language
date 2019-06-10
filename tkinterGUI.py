@@ -49,6 +49,8 @@ class AnimalList:
 
 
 class WarmHeart:
+    state = "Inform"
+
     def __init__(self):
         # 기본 캔버스
         self.width = 700
@@ -83,13 +85,18 @@ class WarmHeart:
         self.LeftFrame.place(x=25, y=140)
 
         # 우측 프레임
+        self.frameList = []
         self.RightFrameWidth = 300
         self.RightFrameHeight = 427
-        self.RightFrame = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2, relief='ridge', background='white')
-        self.RightFrame.place(x=375, y=55)
+        self.frameList.append(Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2, relief='ridge', background='white')) # 정보
+        self.frameList.append(Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2, relief='ridge', background='white')) # 지도
+        self.frameList.append(
+            Listbox(window, width=self.LeftFrameWidth, height=self.LeftFrameHeight+5, borderwidth=2, relief='ridge',
+                    background='white', selectmode="single"))  # 하트
+        self.frameList[0].place(x=375, y=55)
         self.RenderText = []
         for i in range(13):
-            self.RenderText.append(Label(self.RightFrame, background='white'))
+            self.RenderText.append(Label(self.frameList[0], background='white'))
             self.RenderText[i].place(x=0,y=i*20)
             self.RenderText[i]['text'] = ""
         #self.RenderText.configure(state='disabled')
@@ -190,6 +197,26 @@ class WarmHeart:
                 self.i += 1
 
     def InformButtonFunc(self):
+        if self.state == "Inform":
+            pass
+        elif self.state == "Map":
+            self.frameList[1].destroy()
+            self.frameList[0] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2, relief='ridge', background='white')
+            self.frameList[0].place(x=375, y=55)
+            for i in range(13):
+                self.RenderText[i] = Label(self.frameList[0], background='white')
+                self.RenderText[i].place(x=0, y=i * 20)
+                self.RenderText[i]['text'] = ""
+        elif self.state == "Heart":
+            self.frameList[2].destroy()
+            self.frameList[0] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
+                                      relief='ridge', background='white')
+            self.frameList[0].place(x=375, y=55)
+            for i in range(13):
+                self.RenderText[i] = Label(self.frameList[0], background='white')
+                self.RenderText[i].place(x=0, y=i * 20)
+                self.RenderText[i]['text'] = ""
+        self.state = "Inform"
         selection = self.LeftFrame.curselection()
         s = selection[0]
 
@@ -208,10 +235,34 @@ class WarmHeart:
         self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
 
     def MapButtonFunc(self):
-        pass
+        if self.state == "Inform":
+            self.frameList[0].destroy()
+            self.frameList[1] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
+                                      relief='ridge', background='white')
+            self.frameList[1].place(x=375, y=55)
+        elif self.state == "Map":
+            pass
+        elif self.state == "Heart":
+            self.frameList[2].destroy()
+            self.frameList[1] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
+                                      relief='ridge', background='white')
+            self.frameList[1].place(x=375, y=55)
+        self.state = "Map"
 
     def HeartListButtonFunc(self):
-        pass
+        if self.state == "Inform":
+            self.frameList[0].destroy()
+            self.frameList[2] = Listbox(window, width=self.LeftFrameWidth, height=self.LeftFrameHeight+5, borderwidth=2, relief='ridge',
+                    background='white', selectmode="single")
+            self.frameList[2].place(x=375, y=55)
+        elif self.state == "Map":
+            self.frameList[1].destroy()
+            self.frameList[2] = Listbox(window, width=self.LeftFrameWidth, height=self.LeftFrameHeight+5, borderwidth=2, relief='ridge',
+                    background='white', selectmode="single")
+            self.frameList[2].place(x=375, y=55)
+        elif self.state == "Heart":
+            pass
+        self.state = "Heart"
 
     def ImageButtonFunc(self):
         pass
