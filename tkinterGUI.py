@@ -313,12 +313,12 @@ class WarmHeart:
         self.HeartButton['image'] = self.imageList[2]
 
     def MailButtonFunc(self):
-        self.AnimalInform = str(self.RenderText[0]['text'] + " \n" + self.RenderText[1]['text'] \
-                                + " \n" + self.RenderText[2]['text'] + " \n" + self.RenderText[3]['text'] \
-                                + " \n" + self.RenderText[4]['text'] + " \n" + self.RenderText[5]['text'] \
-                                + " \n" + self.RenderText[6]['text'] + " \n" + self.RenderText[7]['text'] \
-                                + " \n" + self.RenderText[8]['text'] + " \n" + self.RenderText[9]['text'] \
-                                + " \n" + self.RenderText[10]['text'] + " \n" + self.RenderText[11]['text'] + " \n" + self.RenderText[12]['text'])
+        self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
+                                + "\n" + self.RenderText[2]['text'] + "\n" + self.RenderText[3]['text'] \
+                                + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
+                                + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
+                                + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
+                                + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
         self.emailWindow = Tk()
         self.emailWindow.width = 200
         self.emailWindow.height = 150
