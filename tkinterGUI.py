@@ -304,13 +304,24 @@ class WarmHeart:
         pass
 
     def HeartButtonFunc(self):
-        for i in self.HeartList:
-            if self.AnimalInform == i:
-                self.HeartList.remove(self.AnimalInform)
-                self.HeartButton['image'] = self.imageList[1]
-                return
-        self.HeartList.append(self.AnimalInform)
-        self.HeartButton['image'] = self.imageList[2]
+        if self.state=="Inform":
+            for i in self.HeartList:
+                if self.AnimalInform == i:
+                    self.HeartList.remove(self.AnimalInform)
+                    self.HeartButton['image'] = self.imageList[1]
+                    return
+            self.HeartList.append(self.AnimalInform)
+            self.HeartButton['image'] = self.imageList[2]
+        elif self.state=="Heart":
+            try:
+                self.HeartSelect = self.frameList[2].curselection()
+                for h in self.HeartList:
+                    if h == self.HeartList[self.HeartSelect[0]]:
+                        self.HeartList.remove(self.HeartList[self.HeartSelect[0]])
+                        self.HeartButton['image'] = self.imageList[1]
+                        return
+            except:
+                pass
 
     def MailButtonFunc(self):
         self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
