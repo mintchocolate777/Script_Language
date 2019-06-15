@@ -60,13 +60,14 @@ class WarmHeart:
 
     def __init__(self):
         # 기본 캔버스
+        window.title("WarmHeart")
         self.width = 700
         self.height = 500
         self.canvas = Canvas(window, width = self.width, height = self.height, bg = "white")
         self.canvas.pack()
 
         # 로고 이미지
-        self.LogoImage = PhotoImage(file = "WarmHeart로고.png")
+        self.LogoImage = PhotoImage(file = "Image/WarmHeart로고.png")
         self.logo = Label(window, image = self.LogoImage)
         self.logo.place(x=25, y=10)
 
@@ -116,23 +117,29 @@ class WarmHeart:
         self.HeartListButton = Button(window, font=tempFont, text=" 하트 ", background="pink", command=self.HeartListButtonFunc)
         self.HeartListButton.place(x=461, y=33)
 
-        # 이미지/하트/이메일 버튼
+        # 그래프/이미지/하트/이메일 버튼
         self.imageList = []
         self.imageList.append(PhotoImage(file='Image/ImageButton.png'))
-        self.ImageButton = Button(window, font=tempFont, image = self.imageList[0], background="pink",command = self.ImageButtonFunc)
-        self.ImageButton.place(x=610, y=33)
         self.imageList.append(PhotoImage(file='Image/EmptyHeartButton.png'))
         self.imageList.append(PhotoImage(file='Image/RedHeartButton.png'))
+        self.imageList.append(PhotoImage(file='Image/MailButton.png'))
+        self.imageList.append(PhotoImage(file='Image/GraphButton.png'))
+        self.GraphButton = Button(window, font=tempFont, image=self.imageList[4], background="pink",
+                                  command=self.GraphButtonFunc)
+        self.GraphButton.place(x=590, y=33)
+        self.ImageButton = Button(window, font=tempFont, image=self.imageList[0], background="pink",
+                                  command=self.ImageButtonFunc)
+        self.ImageButton.place(x=610, y=33)
         self.HeartButton = Button(window, font=tempFont, image=self.imageList[1], background="pink",command = self.HeartButtonFunc)
         self.HeartButton.place(x=630, y=33)
-        self.imageList.append(PhotoImage(file='Image/MailButton.png'))
+
         self.MailButton = Button(window, font=tempFont, image=self.imageList[3], background="pink", command = self.MailButtonFunc)
         self.MailButton.place(x=650, y=33)
 
         # 검색 버튼
         self.SearchButton = Button(window, font=tempFont, text=" 검색 ", background="pink", command=self.SearchButtonFunc)
         self.SearchButton.place(x=280, y=110)
-        
+
         self.i = 0
         self.Hearti = 0
         self.HeartSelect = None
@@ -328,13 +335,16 @@ class WarmHeart:
 
     def HeartButtonFunc(self):
         if self.state=="Inform":
-            for i in self.HeartList:
-                if self.AnimalInform == i:
-                    self.HeartList.remove(self.AnimalInform)
-                    self.HeartButton['image'] = self.imageList[1]
-                    return
-            self.HeartList.append(self.AnimalInform)
-            self.HeartButton['image'] = self.imageList[2]
+            try:
+                for i in self.HeartList:
+                    if self.AnimalInform == i:
+                        self.HeartList.remove(self.AnimalInform)
+                        self.HeartButton['image'] = self.imageList[1]
+                        return
+                self.HeartList.append(self.AnimalInform)
+                self.HeartButton['image'] = self.imageList[2]
+            except:
+                pass
         elif self.state=="Heart":
             try:
                 self.HeartSelect = self.frameList[2].curselection()
@@ -359,6 +369,7 @@ class WarmHeart:
                                     + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
                                     + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
             self.emailWindow = Tk()
+            self.emailWindow.title("메일 전송")
             self.emailWindow.width = 200
             self.emailWindow.height = 150
             self.emailCanvas = Canvas(self.emailWindow, width=self.emailWindow.width, height=self.emailWindow.height,
@@ -370,11 +381,51 @@ class WarmHeart:
             self.emailEntry.place(x=30, y=70)
             self.emailButton = Button(self.emailWindow, text="Send", background="pink", command=self.SendEmail)
             self.emailButton.place(x=85, y=100)
+
+            self.emailWindow.mainloop()
         except:
             pass
 
-
     def SendEmail(self):
         gmail.SendEmail(str(self.emailEntry.get()), self.AnimalInform)
+
+    def GraphButtonFunc(self):
+        dog = 0
+        cat = 0
+        etc = 0
+        for h in self.HeartList:
+            if h[4] == "개":
+                dog += 1
+            elif h[4] == "고":
+                cat += 1
+            else:
+                etc += 1
+        self.GraphWindow = Tk()
+        self.GraphWindow.title("그래프")
+        self.GraphWindow.width = 300
+        self.GraphWindow.height = 300
+        self.GraphCanvas = Canvas(self.GraphWindow, width=self.GraphWindow.width, height=self.GraphWindow.height,
+                                  bg="pink")
+        self.GraphCanvas.pack()
+        self.GraphLabel = Label(self.GraphWindow, text="List of animals in the heart list", bg="pink")
+        self.GraphLabel.place(x=70, y=10)
+        Graphs = [dog, cat, etc]
+        maxCount = int(max(Graphs))
+        self.GraphCanvas.create_line(10, self.GraphWindow.height - 10, self.GraphWindow.width - 10, self.GraphWindow.height - 10)
+        self.GraphCanvas.create_line(10, 50, 10, self.GraphWindow.height - 10)
+        barW = 40
+        for i in range(3):
+            self.GraphCanvas.create_rectangle(barW * i + 10 + 30 * (i+1), self.GraphWindow.height - ((self.GraphWindow.height * Graphs[i]) / (maxCount + 1)) - 10,
+                                         barW * (i + 1) + 10+ 30 * (i+1), self.GraphWindow.height - 10, fill='hotpink')
+            if i == 0:
+                self.GraphCanvas.create_text(20 + i * barW + 9+30 * (i+1), self.GraphWindow.height - 5, text="개")
+            elif i == 1:
+                self.GraphCanvas.create_text(20 + i * barW + 7+ 30 * (i+1), self.GraphWindow.height - 5, text="고양이")
+            elif i == 2:
+                self.GraphCanvas.create_text(20 + i * barW + 9+ 30 * (i+1), self.GraphWindow.height - 5, text="기타")
+            self.GraphCanvas.create_text(60 + i * barW + 30*i, self.GraphWindow.height - ((self.GraphWindow.height * Graphs[i]) / (maxCount + 1)) - 20,
+                                    text=str(Graphs[i]))
+        self.GraphWindow.mainloop()
+
 
 WarmHeart()
