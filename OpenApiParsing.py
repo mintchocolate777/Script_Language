@@ -33,7 +33,9 @@ def SearchBySigungu(upr_cd, org_cd):
     conn.request("GET", server + params)
     res = conn.getresponse()
 
-    if int(res.status) == 200:
+    #if int(res.status) == 200:
+    import spam
+    if spam.myf(res.status):
         XmlString = parseString(res.read().decode('utf-8')).toprettyxml()
     else:
         print("HTTP Request is failed :" + res.reason)

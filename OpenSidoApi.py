@@ -11,7 +11,8 @@ def FindSidoCode(target):
         conn.request("GET", server)
         res = conn.getresponse()
 
-        if int(res.status) == 200:
+        import spam
+        if spam.myf(res.status):
             SidoString = parseString(res.read().decode('utf-8')).toprettyxml()
             break
 
