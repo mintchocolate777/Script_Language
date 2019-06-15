@@ -59,7 +59,6 @@ class AnimalList:
 class WarmHeart:
     state = "Inform"
     HeartList = []
-
     def __init__(self):
         # 기본 캔버스
         window.title("WarmHeart")
@@ -105,7 +104,7 @@ class WarmHeart:
                     background='white', selectmode="single"))  # 하트
         self.frameList[0].place(x=375, y=55)
         self.RenderText = []
-        for i in range(13):
+        for i in range(14):
             self.RenderText.append(Label(self.frameList[0], background='white'))
             self.RenderText[i].place(x=0,y=i*20)
             self.RenderText[i]['text'] = ""
@@ -222,7 +221,7 @@ class WarmHeart:
             self.frameList[1].destroy()
             self.frameList[0] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2, relief='ridge', background='white')
             self.frameList[0].place(x=375, y=55)
-            for i in range(13):
+            for i in range(14):
                 self.RenderText[i] = Label(self.frameList[0], background='white')
                 self.RenderText[i].place(x=0, y=i * 20)
                 self.RenderText[i]['text'] = ""
@@ -232,7 +231,7 @@ class WarmHeart:
             self.frameList[0] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
                                       relief='ridge', background='white')
             self.frameList[0].place(x=375, y=55)
-            for i in range(13):
+            for i in range(14):
                 self.RenderText[i] = Label(self.frameList[0], background='white')
                 self.RenderText[i].place(x=0, y=i * 20)
                 self.RenderText[i]['text'] = ""
@@ -255,6 +254,7 @@ class WarmHeart:
             self.RenderText[10]['text'] = "보호장소 " + curAnimalList[s].careAddr
             self.RenderText[11]['text'] = "담당자 " + curAnimalList[s].chargeNm
             self.RenderText[12]['text'] = "연락처 " + curAnimalList[s].careTel
+            self.RenderText[13]['text'] = "이미지URL " + curAnimalList[s].popfile
         except:
             try:
                 i=0
@@ -272,7 +272,7 @@ class WarmHeart:
                                 + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
                                 + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
                                 + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
-                                + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
+                                + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'] + "\n" + self.RenderText[13]['text'])
         if self.AnimalInform in self.HeartList:
             self.HeartButton['image'] = self.imageList[2]
         else:
@@ -339,18 +339,52 @@ class WarmHeart:
 
     def ImageButtonFunc(self):
         #이미지url 불러오기
-        selection = self.LeftFrame.curselection()
-        s = selection[0]
-        url = curAnimalList[s].popfile
-        print(url)
-        #임시로 이 url사용
-        #url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
-        with urllib.request.urlopen(url) as u:
-            raw_data = u.read()
-        im = Image.open(BytesIO(raw_data))
-        image = ImageTk.PhotoImage(im)
-        imageLabel = Label(self.frameList[0], image=image, height=400, width=400)
-        imageLabel.place(x=0,y=0)
+        try:
+            selection = self.LeftFrame.curselection()
+            s = selection[0]
+            url = curAnimalList[s].popfile
+        except:
+            try:
+                selection = self.frameList[2].curselection()
+                s = selection[0]
+                i = 0
+                url=""
+                check = False
+                for h in self.HeartList[s]:
+                    if h =="\n":
+                        i+=1
+                    if i==13:
+                        if check:
+                            url+=h
+                        if h == " ":
+                            check = True
+
+            except:
+                try:
+                    url = ""
+                    check = False
+                    for h in self.RenderText[13]['text']:
+                        if check:
+                            url += h
+                        if h == " ":
+                            check = True
+                except:
+                    return
+
+        urllib.request.urlretrieve(url, "animal.jpg")
+        AnimalImage = Image.open("animal.jpg")
+        AnimalPhoto = ImageTk.PhotoImage(AnimalImage)
+
+        self.ImageWindow = Toplevel()
+        self.ImageWindow.title("이미지")
+        self.ImageWindow.width = 400
+        self.ImageWindow.height = 400
+        self.ImageCanvas = Canvas(self.ImageWindow, width = self.ImageWindow.width, height=self.ImageWindow.height,bg="pink")
+        self.ImageCanvas.pack()
+
+        ImageLabel = Label(self.ImageCanvas, image=AnimalPhoto, width=self.ImageWindow.width, height=self.ImageWindow.height)
+        ImageLabel.img = AnimalPhoto
+        ImageLabel.place(x=0, y=0)
 
     def HeartButtonFunc(self):
         if self.state=="Inform":
@@ -386,7 +420,7 @@ class WarmHeart:
                                     + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
                                     + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
                                     + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
-                                    + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
+                                    + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'] + "\n" + self.RenderText[13]['text'])
             self.emailWindow = Tk()
             self.emailWindow.title("메일 전송")
             self.emailWindow.width = 200
