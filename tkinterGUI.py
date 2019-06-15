@@ -280,6 +280,8 @@ class WarmHeart:
 
     def MapButtonFunc(self):
         if self.state == "Inform":
+            prevState = "Inform"
+            selection1 = self.RenderText[10]['text']
             self.frameList[0].destroy()
             self.frameList[1] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
                                       relief='ridge', background='white')
@@ -287,6 +289,8 @@ class WarmHeart:
         elif self.state == "Map":
             pass
         elif self.state == "Heart":
+            prevState = "Heart"
+            selection2 = self.frameList[2].curselection()
             self.frameList[2].destroy()
             self.frameList[1] = Frame(window, width=self.RightFrameWidth, height=self.RightFrameHeight, borderwidth=2,
                                       relief='ridge', background='white')
@@ -295,10 +299,39 @@ class WarmHeart:
 
         # openapi로 이미지 url을 가져옴.
         gmaps = Client(key="AIzaSyAxLxOspCCw6v52W-K593bqAdgIBV351M8")
-
-        selection = self.LeftFrame.curselection()
-        s = selection[0]
-        geocode = curAnimalList[s].careAddr
+        try:
+            selection = self.LeftFrame.curselection()
+            s = selection[0]
+            geocode = curAnimalList[s].careAddr
+        except:
+            try:
+                if prevState == "Heart":
+                    s = selection2[0]
+                    i = 0
+                    geocode =""
+                    check = False
+                    for h in self.HeartList[s]:
+                        if h == "\n":
+                            i += 1
+                        if i >= 10:
+                            if check and h =="\n":
+                                break
+                            if check:
+                                geocode += h
+                            if h == " ":
+                                check = True
+                    geocode = str(geocode)
+                elif prevState == "Inform":
+                    geocode = ""
+                    check = False
+                    for h in selection1:
+                        if check:
+                            geocode += h
+                        if h == " ":
+                            check = True
+                    geocode = str(geocode)
+            except:
+                return
         sample = gmaps.geocode("대한민국 " + geocode, language='ko')
         lat = sample[0]['geometry']['location']['lat']
         lng = sample[0]['geometry']['location']['lng']
@@ -358,7 +391,6 @@ class WarmHeart:
                             url+=h
                         if h == " ":
                             check = True
-
             except:
                 try:
                     url = ""
