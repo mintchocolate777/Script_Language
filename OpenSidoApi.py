@@ -24,5 +24,3 @@ def FindSidoCode(target):
     for item in itemElements:
         if item.find("orgdownNm").text == target :
             return item.find("orgCd").text
-
-FindSidoCode("서울특별시")
