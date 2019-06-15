@@ -4,7 +4,12 @@ from tkinter import ttk
 
 import http.client
 from xml.dom.minidom import *
+
+from io import BytesIO # 이미지
 import urllib
+import urllib.request #이미지
+from PIL import Image,ImageTk # 이미지
+
 from xml.etree import ElementTree
 
 import OpenApiParsing
@@ -46,6 +51,8 @@ class AnimalList:
             self.chargeNm = iter.find("chargeNm").text
         if iter.find('careTel')!=None:
             self.careTel = iter.find("careTel").text
+        if iter.find('popfile') != None:
+            self.popfile = iter.find("popfile").text
 
 class WarmHeart:
     state = "Inform"
@@ -301,16 +308,43 @@ class WarmHeart:
             self.Hearti+=1
 
     def ImageButtonFunc(self):
-        pass
+        #self.imageWindow = Tk()
+        #self.imageWindow.geometry("500x500+500+200")
+        ##selection = self.LeftFrame.curselection()
+        ##s = selection[0]
+        ##url = curAnimalList[s].popfile
+        url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
+        with urllib.request.urlopen(url) as u:
+            raw_data = u.read()
+
+        im = Image.open(BytesIO(raw_data))
+        image = ImageTk.PhotoImage(im)
+        imageLabel = Label(self.frameList[1], image=image, height=self.RightFrameHeight, width=self.RightFrameWidth)
+        imageLabel.place(x=0,y=0)
+        #print(type(image))
+        #label = Label(self.imageWindow, image=image, height=400, width=400)
+        #label.pack()
+        #label.place(x=0, y=0)
 
     def HeartButtonFunc(self):
-        for i in self.HeartList:
-            if self.AnimalInform == i:
-                self.HeartList.remove(self.AnimalInform)
-                self.HeartButton['image'] = self.imageList[1]
-                return
-        self.HeartList.append(self.AnimalInform)
-        self.HeartButton['image'] = self.imageList[2]
+        if self.state=="Inform":
+            for i in self.HeartList:
+                if self.AnimalInform == i:
+                    self.HeartList.remove(self.AnimalInform)
+                    self.HeartButton['image'] = self.imageList[1]
+                    return
+            self.HeartList.append(self.AnimalInform)
+            self.HeartButton['image'] = self.imageList[2]
+        elif self.state=="Heart":
+            try:
+                self.HeartSelect = self.frameList[2].curselection()
+                for h in self.HeartList:
+                    if h == self.HeartList[self.HeartSelect[0]]:
+                        self.HeartList.remove(self.HeartList[self.HeartSelect[0]])
+                        self.HeartButton['image'] = self.imageList[1]
+                        return
+            except:
+                pass
 
     def MailButtonFunc(self):
         self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
