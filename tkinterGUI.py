@@ -16,6 +16,8 @@ import OpenApiParsing
 import OpenSidoApi
 import OpenSigunguApi
 import gmail
+from googlemaps import *
+
 
 #OpenApiParsing.SearchByDate()
 
@@ -284,6 +286,27 @@ class WarmHeart:
             self.frameList[1].place(x=375, y=55)
         self.state = "Map"
 
+        # openapi로 이미지 url을 가져옴.
+        gmaps = Client(key="AIzaSyAxLxOspCCw6v52W-K593bqAdgIBV351M8")
+
+        selection = self.LeftFrame.curselection()
+        s = selection[0]
+        geocode = curAnimalList[s].careAddr
+        sample = gmaps.geocode("대한민국 " + geocode, language='ko')
+        lat = sample[0]['geometry']['location']['lat']
+        lng = sample[0]['geometry']['location']['lng']
+
+        key = "http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyAxLxOspCCw6v52W-K593bqAdgIBV351M8"
+        center = "&center=" + str(lat) + "," + str(lng)
+        size = "&size=512x512"
+        visible = "&visible=" + str(lat) + "," + str(lng)
+        markers = "&markers=color:blue%7C" + str(lat) + "," + str(lng)
+        url = key + center + size + visible + markers
+        urllib.request.urlretrieve(url,"map.jpg")
+        self.MapImage = PhotoImage(file="map.jpg")
+        mapimage = Label(self.frameList[1], image=self.MapImage,width = self.RightFrameWidth, height = self.RightFrameHeight)
+        mapimage.place(x=0, y=0)
+
     def HeartListButtonFunc(self):
         # 프레임 전환
         if self.state == "Inform":
@@ -308,23 +331,19 @@ class WarmHeart:
             self.Hearti+=1
 
     def ImageButtonFunc(self):
-        #self.imageWindow = Tk()
-        #self.imageWindow.geometry("500x500+500+200")
-        ##selection = self.LeftFrame.curselection()
-        ##s = selection[0]
-        ##url = curAnimalList[s].popfile
-        url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
+        #이미지url 불러오기
+        selection = self.LeftFrame.curselection()
+        s = selection[0]
+        url = curAnimalList[s].popfile
+        print(url)
+        #임시로 이 url사용
+        #url = "http://tong.visitkorea.or.kr/cms/resource/74/2396274_image2_1.JPG"
         with urllib.request.urlopen(url) as u:
             raw_data = u.read()
-
         im = Image.open(BytesIO(raw_data))
         image = ImageTk.PhotoImage(im)
-        imageLabel = Label(self.frameList[1], image=image, height=self.RightFrameHeight, width=self.RightFrameWidth)
+        imageLabel = Label(self.frameList[0], image=image, height=400, width=400)
         imageLabel.place(x=0,y=0)
-        #print(type(image))
-        #label = Label(self.imageWindow, image=image, height=400, width=400)
-        #label.pack()
-        #label.place(x=0, y=0)
 
     def HeartButtonFunc(self):
         if self.state=="Inform":
