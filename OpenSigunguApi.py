@@ -22,8 +22,6 @@ def MakeSIgunguList(sidocode):
 
     conn.close()
 
-    print(SigunguString)
-
     from xml.etree import ElementTree
     tree = ElementTree.fromstring(SigunguString)
     itemElements = tree.getiterator("item")
@@ -55,11 +53,5 @@ def FindSigunguCode(target, sidocode):
 
     itemElements = tree.getiterator("item")
     for item in itemElements:
-        #print(item.find("orgdownNm").text)
         if item.find("orgdownNm").text == target :
-            #print(item.find("orgCd").text)
             return item.find("orgCd").text
-
-
-#print(FindSigunguCode("°­³²±¸", "6110000"))
-#MakeSIgunguList("6420000")
