@@ -132,7 +132,7 @@ class WarmHeart:
         # 검색 버튼
         self.SearchButton = Button(window, font=tempFont, text=" 검색 ", background="pink", command=self.SearchButtonFunc)
         self.SearchButton.place(x=280, y=110)
-
+        
         self.i = 0
         self.Hearti = 0
         self.HeartSelect = None
@@ -347,23 +347,32 @@ class WarmHeart:
                 pass
 
     def MailButtonFunc(self):
-        self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
-                                + "\n" + self.RenderText[2]['text'] + "\n" + self.RenderText[3]['text'] \
-                                + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
-                                + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
-                                + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
-                                + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
-        self.emailWindow = Tk()
-        self.emailWindow.width = 200
-        self.emailWindow.height = 150
-        self.emailCanvas = Canvas(self.emailWindow, width=self.emailWindow.width, height=self.emailWindow.height, bg="pink")
-        self.emailCanvas.pack()
-        self.emailLabel = Label(self.emailWindow, text = "이메일 주소를 입력하세요", bg = "pink")
-        self.emailLabel.place(x=30, y=40)
-        self.emailEntry = Entry(self.emailWindow, text='', justify=LEFT, width=20)
-        self.emailEntry.place(x=30, y=70)
-        self.emailButton = Button(self.emailWindow, text = "Send", background="pink",command = self.SendEmail)
-        self.emailButton.place(x=85, y=100)
+        try:
+            if self.state == 'Heart':
+                self.HeartSelect = self.frameList[2].curselection()
+                self.AnimalInform = self.HeartList[self.HeartSelect[0]]
+            else:
+                self.AnimalInform = str(self.RenderText[0]['text'] + "\n" + self.RenderText[1]['text'] \
+                                    + "\n" + self.RenderText[2]['text'] + "\n" + self.RenderText[3]['text'] \
+                                    + "\n" + self.RenderText[4]['text'] + "\n" + self.RenderText[5]['text'] \
+                                    + "\n" + self.RenderText[6]['text'] + "\n" + self.RenderText[7]['text'] \
+                                    + "\n" + self.RenderText[8]['text'] + "\n" + self.RenderText[9]['text'] \
+                                    + "\n" + self.RenderText[10]['text'] + "\n" + self.RenderText[11]['text'] + "\n" + self.RenderText[12]['text'])
+            self.emailWindow = Tk()
+            self.emailWindow.width = 200
+            self.emailWindow.height = 150
+            self.emailCanvas = Canvas(self.emailWindow, width=self.emailWindow.width, height=self.emailWindow.height,
+                                      bg="pink")
+            self.emailCanvas.pack()
+            self.emailLabel = Label(self.emailWindow, text="이메일 주소를 입력하세요", bg="pink")
+            self.emailLabel.place(x=30, y=40)
+            self.emailEntry = Entry(self.emailWindow, text='', justify=LEFT, width=20)
+            self.emailEntry.place(x=30, y=70)
+            self.emailButton = Button(self.emailWindow, text="Send", background="pink", command=self.SendEmail)
+            self.emailButton.place(x=85, y=100)
+        except:
+            pass
+
 
     def SendEmail(self):
         gmail.SendEmail(str(self.emailEntry.get()), self.AnimalInform)
