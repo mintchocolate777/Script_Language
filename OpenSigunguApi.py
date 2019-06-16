@@ -14,7 +14,8 @@ def MakeSIgunguList(sidocode):
     conn.request("GET", server + sidocode + servicekey)
     res = conn.getresponse()
 
-    if int(res.status) == 200:
+    import spam
+    if spam.myf(res.status):
         SigunguString = parseString(res.read().decode('utf-8')).toprettyxml()
     else:
         print("HTTP Request is failed :" + res.reason)
