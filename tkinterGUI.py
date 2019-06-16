@@ -405,6 +405,7 @@ class WarmHeart:
 
         urllib.request.urlretrieve(url, "animal.jpg")
         AnimalImage = Image.open("animal.jpg")
+        AnimalImage = AnimalImage.resize((400,400))
         AnimalPhoto = ImageTk.PhotoImage(AnimalImage)
 
         self.ImageWindow = Toplevel()
