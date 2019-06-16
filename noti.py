@@ -7,7 +7,6 @@ import sqlite3
 import telepot
 from pprint import pprint
 from urllib.request import urlopen
-from bs4 import BeautifulSoup
 import re
 from datetime import date, datetime, timedelta
 import traceback
@@ -42,37 +41,6 @@ def getData(bgnde, endde):
         try:
             row = kind+"\n"+gender+"\n"+color+"\n"+weight+"\n"+age+"\n"+happenPlace+"\n"+specialMark+"\n"+happenDt+"\n"+neuterYn+"\n"+\
                 careNm+"\n"+careAddr+"\n"+chargeNm+"\n"+careTel+"\n"+popfile
-        except IndexError:
-            return
-        if row:
-            res_list.append(row.strip())
-    return res_list
-
-def getData2(upr_cd, org_cd):
-    res_list = []
-    Upr_cd = OpenSidoApi.FindSidoCode(upr_cd)
-    Org_cd = OpenSigunguApi.FindSigunguCode(org_cd, upr_cd)
-    tree = OpenApiParsing.SearchBySigungu(Upr_cd, Org_cd)
-    itemElements = tree.getiterator("item")
-    for item in itemElements:
-        print(item)
-        kind = "품종: " + item.find("kindCd").text
-        gender = "성별: " + item.find("sexCd").text
-        color = "털색: " + item.find("colorCd").text
-        weight = "체중: " + item.find("weight").text
-        age = "나이: " + item.find("age").text
-        happenPlace = "발견: " + item.find("happenPlace").text
-        specialMark = "특징: " + item.find("specialMark").text
-        happenDt = "접수: " + item.find("happenDt").text
-        neuterYn = "중성화여부: " + item.find("neuterYn").text
-        careNm = "보호소이름: " + item.find("careNm").text
-        careAddr = "보호장소: " + item.find("careAddr").text
-        chargeNm = "담당자: " + item.find("chargeNm").text
-        careTel = "연락처: " + item.find("careTel").text
-        popfile = "이미지URL: " + item.find("popfile").text
-        try:
-            row = kind + "\n" + gender + "\n" + color + "\n" + weight + "\n" + age + "\n" + happenPlace + "\n" + specialMark + "\n" + happenDt + "\n" + neuterYn + "\n" + \
-                  careNm + "\n" + careAddr + "\n" + chargeNm + "\n" + careTel + "\n" + popfile
         except IndexError:
             return
         if row:
