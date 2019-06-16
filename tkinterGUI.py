@@ -68,7 +68,7 @@ class WarmHeart:
         self.canvas.pack()
 
         # 로고 이미지
-        self.LogoImage = PhotoImage(file = "Image/WarmHeart로고.png")
+        self.LogoImage = PhotoImage(file = "Image/WarmHeartLogo.png")
         self.logo = Label(window, image = self.LogoImage)
         self.logo.place(x=25, y=10)
 
